@@ -1,0 +1,20 @@
+{
+  "buildFiles": [
+    "C:\\development_flutter\\flutter_windows_3.24.1-stable\\flutter\\packages\\flutter_tools\\gradle\\src\\main\\groovy\\CMakeLists.txt"
+  ],
+  "cleanCommandsComponents": [
+    [
+      "C:\\Users\\Dina\\AppData\\Local\\Android\\sdk\\cmake\\3.22.1\\bin\\ninja.exe",
+      "-C",
+      "C:\\Users\\Dina\\Desktop\\G_Project\\gp_project_repo\\flutter\\skin_scan_app\\android\\app\\.cxx\\Debug\\1t4j6h2l\\armeabi-v7a",
+      "clean"
+    ]
+  ],
+  "buildTargetsCommandComponents": [
+    "C:\\Users\\Dina\\AppData\\Local\\Android\\sdk\\cmake\\3.22.1\\bin\\ninja.exe",
+    "-C",
+    "C:\\Users\\Dina\\Desktop\\G_Project\\gp_project_repo\\flutter\\skin_scan_app\\android\\app\\.cxx\\Debug\\1t4j6h2l\\armeabi-v7a",
+    "{LIST_OF_TARGETS_TO_BUILD}"
+  ],
+  "libraries": {}
+}
