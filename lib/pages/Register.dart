@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:loading_animation_widget/loading_animation_widget.dart' show LoadingAnimationWidget;
+import 'package:loading_animation_widget/loading_animation_widget.dart'
+    show LoadingAnimationWidget;
 import 'package:sizer/sizer.dart';
 
 import '../Api/constants.dart' show PrimaryColor;
@@ -167,20 +168,22 @@ class _Register_UserState extends State<Register_User> {
             //#####################################
 
             //to create login button
-            _isLoading
-                ? Column(
-                    children: [
-                      SizedBox(height: 2.5.h),
-                      LoadingAnimationWidget.inkDrop(
-                    color: PrimaryColor,
-                    size: 40,
-                  )
-                    ],
-                  )
-                : Loginbutton(
-                    button: 'Register',
-                    onPressed: validateAndRegister,
-                  ),
+            // _isLoading
+            //     ? Column(
+            //         children: [
+            //           SizedBox(height: 2.5.h),
+            //           LoadingAnimationWidget.inkDrop(
+            //         color: PrimaryColor,
+            //         size: 40,
+            //       )
+            //         ],
+            //       )
+            //     :
+            Loginbutton(
+              isloading: _isLoading,
+              button: 'Register',
+              onPressed: validateAndRegister,
+            ),
             //#####################################
 
             // SocialLoginButtons(),

@@ -29,6 +29,8 @@ class _MessagePageState extends State<MessagePage> {
   late Chat chatService;
   bool isLoading = true;
   HubConnection? hubConnection;
+  bool isSending = false;
+  bool isSendingImage = false;
 
   final TextEditingController messageController = TextEditingController();
   List<Map<String, dynamic>> messages = [];
@@ -81,8 +83,9 @@ class _MessagePageState extends State<MessagePage> {
         .openCon(await Tokens.getId(await Tokens.retrieve('access_token')));
     await chatService.startCon();
     listenMessage();
-    initSignalR();
-    initSignalRImage();
+    //  initSignalR();
+    //  initSignalRImage();
+
     print("Connection successful! ");
 
     if (chatService.hubConnection?.state != HubConnectionState.connected) {
@@ -106,10 +109,19 @@ class _MessagePageState extends State<MessagePage> {
 
   void listenMessage() {
     chatService.hubConnection!.on("receiveMessage", (dynamic message) {
-      if (message != null) {
-        if (!mounted) return;
+      if (!mounted || message == null || message.isEmpty) return;
+      final isFromMe = message[0]['senderId'] == userId;
 
+      if (isFromMe &&
+          message[0]['type'] == 'text' &&
+          messages.any((m) =>
+              m['text'] == message[0]['content'] && m['type'] == 'text')) {
+        return;
+      }
+
+      if (message != null) {
         print(" Received message: $message");
+        debugPrint("received message from server: $message");
 
         setState(() {
           messages.add({
@@ -130,9 +142,11 @@ class _MessagePageState extends State<MessagePage> {
 
   @override
   void dispose() {
+    chatService.hubConnection?.off("receiveMessage");
     messageController.dispose();
-    scrollController.dispose();
 
+    ///new
+    scrollController.dispose();
     super.dispose();
   }
 
@@ -188,8 +202,13 @@ class _MessagePageState extends State<MessagePage> {
   }
 
   void sendImageToServer(XFile image) async {
+    setState(() {
+      isSendingImage = true;
+    });
     if (isChatServiceInitialized()) {
       try {
+        await waitForConnection();
+
         String? data = await chatService.sendImage(idDoctor, image);
 
         if (data != "" && data != null) {
@@ -225,21 +244,37 @@ class _MessagePageState extends State<MessagePage> {
         const SnackBar(content: Text("Chat service not connected.")),
       );
     }
+    setState(() {
+      isSendingImage = false;
+    });
+  }
+
+  Future<void> waitForConnection() async {
+    while (chatService.hubConnection?.state != HubConnectionState.connected) {
+      await Future.delayed(const Duration(milliseconds: 200));
+    }
   }
 
   void sendMessageToServer(String text) async {
-    if (isChatServiceInitialized()) {
-      scrollToBottom();
+    setState(() {
+      isSending = true;
+    });
+    if (chatService.hubConnection?.state == HubConnectionState.connected) {
+      await waitForConnection();
       await chatService.sendMessage(idDoctor, text);
       messageController.clear();
+
+      scrollToBottom();
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text(
-              "Chat service not initialized or connection not established"),
+          content: Text("Chat service not connected."),
         ),
       );
     }
+    setState(() {
+      isSending = false;
+    });
   }
 
   void _pickImageFromGallery() async {
@@ -405,15 +440,40 @@ class _MessagePageState extends State<MessagePage> {
                                   ? Colors.blue[100]
                                   : Colors.green[100],
                             ),
-                            child: Image.network(
-                              message['imageUrl'] ?? "",
-                              width: 200,
-                              height: 200,
-                              fit: BoxFit.cover,
-                              errorBuilder: (context, error, stackTrace) =>
-                                  const Icon(Icons.broken_image,
-                                      size: 100, color: Colors.red),
+                            child: GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) => FullScreenImage(
+                                      imageUrl: message['imageUrl'] ?? "",
+                                    ),
+                                  ),
+                                );
+                              },
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(10),
+                                child: Image.network(
+                                  message['imageUrl'] ?? "",
+                                  width: 200,
+                                  height: 200,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (context, error, stackTrace) =>
+                                      const Icon(Icons.broken_image,
+                                          size: 100, color: Colors.red),
+                                ),
+                              ),
                             ),
+
+                            // child: Image.network(
+                            //   message['imageUrl'] ?? "",
+                            //   width: 200,
+                            //   height: 200,
+                            //   fit: BoxFit.cover,
+                            //   errorBuilder: (context, error, stackTrace) =>
+                            //       const Icon(Icons.broken_image,
+                            //           size: 100, color: Colors.red),
+                            // ),
                           ),
                         );
                       } else if (message['type'] == 'text') {
@@ -429,14 +489,21 @@ class _MessagePageState extends State<MessagePage> {
                   padding: EdgeInsets.all(1.h),
                   child: Row(
                     children: [
-                      IconButton(
-                        icon: const Icon(
-                          Icons.photo,
-                          color: PrimaryColor,
-                        ),
-                        iconSize: 7.w,
-                        onPressed: _pickImageFromGallery,
-                      ),
+                      isSendingImage
+                          ? const Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: CircularProgressIndicator(
+                                color: PrimaryColor,
+                              ),
+                            )
+                          : IconButton(
+                              icon: const Icon(
+                                Icons.photo,
+                                color: PrimaryColor,
+                              ),
+                              iconSize: 7.w,
+                              onPressed: _pickImageFromGallery,
+                            ),
                       Expanded(
                         child: TextField(
                           controller: messageController,
@@ -454,19 +521,26 @@ class _MessagePageState extends State<MessagePage> {
                         ),
                       ),
                       SizedBox(width: 2.h),
-                      IconButton(
-                        icon: const Icon(
-                          Icons.send,
-                          color: PrimaryColor,
-                        ),
-                        iconSize: 7.w,
-                        onPressed: () {
-                          final text = messageController.text;
-                          if (text.isNotEmpty) {
-                            sendMessageToServer(text);
-                          }
-                        },
-                      ),
+                      isSending
+                          ? const Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: CircularProgressIndicator(
+                                color: PrimaryColor,
+                              ),
+                            )
+                          : IconButton(
+                              icon: const Icon(
+                                Icons.send,
+                                color: PrimaryColor,
+                              ),
+                              iconSize: 7.w,
+                              onPressed: () {
+                                final text = messageController.text;
+                                if (text.isNotEmpty) {
+                                  sendMessageToServer(text);
+                                }
+                              },
+                            ),
                     ],
                   ),
                 ),
@@ -492,53 +566,26 @@ class _MessagePageState extends State<MessagePage> {
       ),
     );
   }
+}
 
-//################################################
-  // void showFullImage(BuildContext context, XFile image) {
-  //   showDialog(
-  //     context: context,
-  //     builder: (BuildContext context) {
-  //       return Dialog(
-  //         child: GestureDetector(
-  //           onTap: () {
-  //             Navigator.of(context).pop();
-  //           },
-  //           child: InteractiveViewer(
-  //             child: Image.file(
-  //               File(image.path),
-  //               fit: BoxFit.contain,
-  //             ),
-  //           ),
-  //         ),
-  //       );
-  //     },
-  //   );
-  // }
-//################################################
+class FullScreenImage extends StatelessWidget {
+  final String imageUrl;
 
-  // Widget buildImageMessage(XFile image, bool isReceived) {
-  //   return Align(
-  //     alignment: isReceived ? Alignment.centerLeft : Alignment.centerRight,
-  //     child: GestureDetector(
-  //       onTap: () {
-  //         showFullImage(context, image);
-  //       },
-  //       child: Container(
-  //         margin: EdgeInsets.symmetric(vertical: 1.h),
-  //         decoration: BoxDecoration(
-  //           borderRadius: BorderRadius.circular(10),
-  //         ),
-  //         child: ClipRRect(
-  //           borderRadius: BorderRadius.circular(10),
-  //           child: Image.file(
-  //             File(image.path),
-  //             width: 40.w,
-  //             height: 40.w,
-  //             fit: BoxFit.cover,
-  //           ),
-  //         ),
-  //       ),
-  //     ),
-  //   );
-  // }
+  const FullScreenImage({super.key, required this.imageUrl});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.black,
+      appBar: AppBar(
+        backgroundColor: Colors.black,
+        iconTheme: const IconThemeData(color: Colors.white),
+      ),
+      body: Center(
+        child: InteractiveViewer(
+          child: Image.network(imageUrl),
+        ),
+      ),
+    );
+  }
 }

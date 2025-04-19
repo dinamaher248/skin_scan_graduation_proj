@@ -123,17 +123,18 @@ class _LoginUserState extends State<LoginUser> {
                 ),
                 //const buildRememberMeRow(),
                 Loginbutton(
+                  isloading: _isLoading,
                   button: 'Log In',
                   onPressed: validateAndLogin,
                 ),
-                if (_isLoading)
-                  Container(
-                      child: Center(
-                    child: LoadingAnimationWidget.inkDrop(
-                      color: PrimaryColor,
-                      size: 40,
-                    ),
-                  )),
+                //if (_isLoading)
+                  // Container(
+                  //     child: Center(
+                  //   child: LoadingAnimationWidget.inkDrop(
+                  //     color: PrimaryColor,
+                  //     size: 40,
+                  //   ),
+                  // )),
                 // SocialLoginButtons(),
                 const buildSignUp(
                   text: 'Don’t have account? Sign UP',
