@@ -123,16 +123,32 @@ class _MessagePageState extends State<MessagePage> {
         print(" Received message: $message");
         debugPrint("received message from server: $message");
 
+        // setState(() {
+        //   messages.add({
+        //     'text': message[0]['type'] == 'text' ? message[0]['content'] : null,
+        //     'isReceived': message[0]['senderId'] != userId,
+        //     'type': message[0]['type'],
+        //     'imageUrl': message[0]['type'] == 'image'
+        //         ? "$resourceUrl${message[0]['content']}"
+        //         : null,
+        //   });
+        // });
+
         setState(() {
-          messages.add({
-            'text': message[0]['type'] == 'text' ? message[0]['content'] : null,
+          final newMessage = {
             'isReceived': message[0]['senderId'] != userId,
             'type': message[0]['type'],
-            'imageUrl': message[0]['type'] == 'image'
-                ? "$resourceUrl${message[0]['content']}"
-                : null,
-          });
+          };
+
+          if (message[0]['type'] == 'text') {
+            newMessage['text'] = message[0]['content'];
+          } else if (message[0]['type'] == 'image') {
+            newMessage['imageUrl'] = "$resourceUrl${message[0]['content']}";
+          }
+///**/
+          messages.add(newMessage);
         });
+
         print("Received image path: ${message[0]['content']}");
         print(" Message added to state: ${message[0]['content']}");
         scrollToBottom();
@@ -160,16 +176,31 @@ class _MessagePageState extends State<MessagePage> {
           await chatService.fetchChatHistory(senderId, idDoctor);
       print('chathistoryyyyy : $chatHistory');
       setState(() {
-        messages = chatHistory
-            .map((msg) => {
-                  'text': msg['type'] == 'text' ? msg['content'] : null,
-                  'isReceived': msg['senderId'] != userId,
-                  'type': msg['type'],
-                  'imageUrl': msg['type'] == 'image'
-                      ? "$resourceUrl${msg['fileUrl']}"
-                      : null,
-                })
-            .toList();
+        messages = chatHistory.map((msg) {
+          final newMsg = {
+            'isReceived': msg['senderId'] != userId,
+            'type': msg['type'],
+          };
+
+          if (msg['type'] == 'text') {
+            newMsg['text'] = msg['content'];
+          } else if (msg['type'] == 'image') {
+            newMsg['imageUrl'] = "$resourceUrl${msg['fileUrl']}";
+          }
+
+          return newMsg;
+        }).toList();
+
+        // messages = chatHistory
+        //     .map((msg) => {
+        //           'text': msg['type'] == 'text' ? msg['content'] : null,
+        //           'isReceived': msg['senderId'] != userId,
+        //           'type': msg['type'],
+        //           'imageUrl': msg['type'] == 'image'
+        //               ? "$resourceUrl${msg['fileUrl']}"
+        //               : null,
+        //         })
+        //     .toList();
         isLoading = false;
         scrollToBottom();
         print("Loaded chat history: $chatHistory");
@@ -425,7 +456,7 @@ class _MessagePageState extends State<MessagePage> {
                     itemCount: messages.length,
                     itemBuilder: (context, index) {
                       final message = messages[index];
-                      if (message['type'] == 'image') {
+                      if (message['type'] == 'image'&&message['imageUrl'] != null) {
                         return Align(
                           alignment: message['isReceived']
                               ? Alignment.centerLeft
@@ -454,6 +485,8 @@ class _MessagePageState extends State<MessagePage> {
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(10),
                                 child: Image.network(
+                                  
+                                   key: UniqueKey(), 
                                   message['imageUrl'] ?? "",
                                   width: 200,
                                   height: 200,
@@ -464,21 +497,13 @@ class _MessagePageState extends State<MessagePage> {
                                 ),
                               ),
                             ),
-
-                            // child: Image.network(
-                            //   message['imageUrl'] ?? "",
-                            //   width: 200,
-                            //   height: 200,
-                            //   fit: BoxFit.cover,
-                            //   errorBuilder: (context, error, stackTrace) =>
-                            //       const Icon(Icons.broken_image,
-                            //           size: 100, color: Colors.red),
-                            // ),
                           ),
                         );
-                      } else if (message['type'] == 'text') {
+                      } else if (message['type'] == 'text' &&message['text'] != null && message['text'].toString().trim().isNotEmpty) {
                         return buildMessage(
-                            message['text'], message['isReceived']);
+                          message['text'] ,
+                          message['isReceived'] ?? false,
+                        );
                       } else {
                         return const SizedBox.shrink();
                       }
