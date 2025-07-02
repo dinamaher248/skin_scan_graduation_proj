@@ -85,6 +85,7 @@ class _MessagePageState extends State<MessagePage> {
     listenMessage();
     //  initSignalR();
     //  initSignalRImage();
+    //is here
 
     print("Connection successful! ");
 
