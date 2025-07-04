@@ -85,7 +85,6 @@ class _MessagePageState extends State<MessagePage> {
     listenMessage();
     //  initSignalR();
     //  initSignalRImage();
-    //is here
 
     print("Connection successful! ");
 
@@ -146,12 +145,27 @@ class _MessagePageState extends State<MessagePage> {
           } else if (message[0]['type'] == 'image') {
             newMessage['imageUrl'] = "$resourceUrl${message[0]['content']}";
           }
-///**/
+
+          ///**/
           messages.add(newMessage);
         });
 
         print("Received image path: ${message[0]['content']}");
         print(" Message added to state: ${message[0]['content']}");
+        scrollToBottom();
+      }
+    });
+    chatService.hubConnection!.on("receiveFile", (dynamic data) {
+      if (!mounted || data == null || data.isEmpty) return;
+      String fileUrl = data[0]["fileUrl"] ?? "";
+      if (fileUrl.isNotEmpty) {
+        setState(() {
+          messages.add({
+            "imageUrl": "$resourceUrl$fileUrl",
+            "isReceived": true,
+            "type": "image",
+          });
+        });
         scrollToBottom();
       }
     });
@@ -457,7 +471,8 @@ class _MessagePageState extends State<MessagePage> {
                     itemCount: messages.length,
                     itemBuilder: (context, index) {
                       final message = messages[index];
-                      if (message['type'] == 'image'&&message['imageUrl'] != null) {
+                      if (message['type'] == 'image' &&
+                          message['imageUrl'] != null) {
                         return Align(
                           alignment: message['isReceived']
                               ? Alignment.centerLeft
@@ -486,8 +501,7 @@ class _MessagePageState extends State<MessagePage> {
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(10),
                                 child: Image.network(
-                                  
-                                   key: UniqueKey(), 
+                                  key: UniqueKey(),
                                   message['imageUrl'] ?? "",
                                   width: 200,
                                   height: 200,
@@ -500,9 +514,11 @@ class _MessagePageState extends State<MessagePage> {
                             ),
                           ),
                         );
-                      } else if (message['type'] == 'text' &&message['text'] != null && message['text'].toString().trim().isNotEmpty) {
+                      } else if (message['type'] == 'text' &&
+                          message['text'] != null &&
+                          message['text'].toString().trim().isNotEmpty) {
                         return buildMessage(
-                          message['text'] ,
+                          message['text'],
                           message['isReceived'] ?? false,
                         );
                       } else {
