@@ -2,33 +2,31 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:sizer/sizer.dart';
-import 'package:skin_scan_app/pages/clincs.dart';
-import 'helper/token.dart';
-import 'pages/Doctors.dart';
-import 'pages/about_us.dart';
-import 'pages/appointment3.dart';
-import 'pages/booking_page.dart';
-import 'pages/browes diseases1.dart';
-import 'pages/call.dart';
-import 'pages/cart.dart';
-import 'pages/chat.dart';
-import 'pages/doctor_info.dart';
-import 'pages/doctor_register.dart';
-import 'pages/feedback.dart';
-import 'pages/success.dart';
-import 'pages/Home.dart';
-import 'pages/Setting.dart';
-import 'pages/browse_disease.dart';
-import 'pages/camera.dart';
-import 'pages/details_diseases.dart';
-import 'pages/Register.dart';
-import 'pages/first.dart';
-import 'pages/login.dart';
-import 'pages/invite.dart';
-import 'pages/second.dart';
-import 'pages/third.dart';
-import 'pages/user_info.dart';
-import 'pages/users_page.dart';
+import 'features/clincs/presentation/view/clincs.dart';
+import 'features/chat/presentation/view/chat.dart';
+import 'features/doctors/presentation/view/doctors.dart';
+import 'features/setting/diseases/presentation/view/Browse_disease.dart';
+import 'core/helper/token.dart';
+import 'features/setting/about_us/presentation/view/about_us.dart';
+import 'features/appointment/presentation/view/appointment3.dart';
+import 'features/setting/diseases/presentation/view/browes diseases1.dart';
+import 'features/doctors/presentation/view/call.dart';
+import 'features/setting/cart.dart';
+import 'features/doctors/presentation/view/doctor_info.dart';
+import 'features/doctors/presentation/view/doctor_register.dart';
+import 'features/setting/feedback/presentation/view/feedback.dart';
+import 'features/home/presentation/view/Home.dart';
+import 'features/setting/Setting.dart';
+import 'features/camera/presentation/view/camera.dart';
+import 'features/setting/diseases/presentation/view/details_diseases.dart';
+import 'features/register/presentation/view/Register.dart';
+import 'features/splash/presentation/view/splash_view.dart';
+import 'features/login/presentation/view/login.dart';
+import 'features/setting/invite/presentation/view/invite.dart';
+import 'features/splash/presentation/view/onboarding1.dart';
+import 'features/splash/presentation/view/onboarding2.dart';
+import 'features/profile/presentation/view/user_info.dart';
+import 'features/profile/presentation/view/users_page.dart';
 
 late List<CameraDescription> cameras;
 
@@ -68,7 +66,7 @@ Future<void> _requestCameraPermission() async {
 class MyApp extends StatelessWidget {
 final String initialRoute;
 
-  const MyApp({Key? key, required this.initialRoute}) : super(key: key);
+  const MyApp({super.key, required this.initialRoute});
 
   @override
   Widget build(BuildContext context) {
@@ -94,12 +92,12 @@ final String initialRoute;
         '/doctors': (context) => Doctors(),
         '/feedback': (context) => FeedbackPage(),
         '/chat': (context) => MessagePage(idDoctor: '',userName: '',),
-        '/call': (context) => CallingPage(),
-        '/users': (context) => Users(),
-        '/doctor_info': (context) => DoctorInfo(id: '',),
-        '/doctorDetails': (context) => DoctorRegister(),
+        '/call': (context) => const CallingPage(),
+        '/users': (context) => const Users(),
+        '/doctor_info': (context) => const DoctorInfo(id: '',),
+        '/doctorDetails': (context) => const DoctorRegister(),
         '/appointmentAll': (context) => AppointmentsPage(doctorId: '',),
-        '/clincs': (context) => Clincs(),
+        '/clincs': (context) => const Clincs(),
    
       },
     );
