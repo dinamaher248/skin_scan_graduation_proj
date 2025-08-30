@@ -142,14 +142,6 @@ class Wounds_card extends StatelessWidget {
                                   } else {
                                     print("Error: ID is null");
                                   }
-
-                                  // Navigator.push(
-                                  //   context,
-                                  //   MaterialPageRoute(
-                                  //     builder: (context) =>
-                                  //         InfectionPage(id: data?.id as int),
-                                  //   ),
-                                  // );
                                 },
                                 style: ElevatedButton.styleFrom(
                                   shape: const CircleBorder(),

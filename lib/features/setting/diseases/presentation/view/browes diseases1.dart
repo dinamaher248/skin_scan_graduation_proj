@@ -9,10 +9,10 @@ class BrowseDiseases1 extends StatelessWidget {
   @override
   String HandlePrevention(List<String>? prev) {
     String result = "";
-    if(prev != null)
-    for (var i = 0; i < prev.length; i++) {
-      result += "${i+1}- ${prev[i]}\n\n";
-    }
+    if (prev != null)
+      for (var i = 0; i < prev.length; i++) {
+        result += "${i + 1}- ${prev[i]}\n\n";
+      }
     return result;
   }
 
@@ -26,8 +26,10 @@ class BrowseDiseases1 extends StatelessWidget {
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: BrowseDiseaseWidget(
-          bacteraia_text_bar: disease.Name as String,
-          Description_text: disease.Description as String,
+          bacteraia_text_bar:
+              disease.Name  ?? "There is no name to describe" as String,
+          Description_text:
+              disease.Description ?? "There is no data to describe" as String,
           Prevention_text: HandlePrevention(disease.preventions),
         ),
       ),
