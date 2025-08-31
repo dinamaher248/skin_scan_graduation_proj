@@ -3,18 +3,20 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sizer/sizer.dart';
 
+import '../../../../../core/utils/constants.dart';
+
 Widget SocialLoginButtons() {
   return Column(
     children: [
       Text(
         'Or Continue With',
         style: GoogleFonts.inter(
-          color: const Color(0xFF34539D),
+          color: PrimaryColor,
           fontSize: 14.7.sp,
-          fontWeight: FontWeight.w600, //semibold
+          fontWeight: FontWeight.w600, 
         ),
       ),
-      SizedBox(height: 7.h),
+      SizedBox(height: 3.h),
       Row(
         mainAxisAlignment: MainAxisAlignment.center,
         mainAxisSize: MainAxisSize.min,

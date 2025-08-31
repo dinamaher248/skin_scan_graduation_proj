@@ -118,10 +118,10 @@ class _Setting_pageState extends State<Setting_page> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
 
       bottomNavigationBar: Padding(
-        padding: EdgeInsets.only(bottom: 6.w), // Reduced padding
+        padding: EdgeInsets.only(bottom: 6.w), 
 
         child: Padding(
-          padding: EdgeInsets.all(1.0.h), // Reduced padding
+          padding: EdgeInsets.all(1.0.h),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(80.w),
             child: SizedBox(

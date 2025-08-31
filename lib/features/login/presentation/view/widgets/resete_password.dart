@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sizer/sizer.dart';
+
+import '../../../../../core/widgets/custom_snack_bar.dart';
 // import 'package:graduate_proj/widgets/Login_Register/email&password_widget.dart';
 
 class ForgotPasswordPage extends StatefulWidget {
@@ -16,11 +18,10 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
 
   void resetPassword() {
     if (_formKey.currentState?.validate() ?? false) {
-      // Handle password reset logic here
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-            content:
-                Text('Password reset link sent to ${_emailController.text}')),
+      customSnackBar(
+        context,
+        "Password reset link sent to ${_emailController.text}",
+        Colors.green,
       );
     }
   }
@@ -52,7 +53,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                     style: GoogleFonts.inter(
                       color: Colors.black,
                       fontSize: 16.sp,
-                      fontWeight: FontWeight.w600, //semi bold
+                      fontWeight: FontWeight.w600,
                     )),
               ),
             ],

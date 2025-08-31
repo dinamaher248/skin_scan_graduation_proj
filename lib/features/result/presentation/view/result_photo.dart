@@ -4,6 +4,7 @@ import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:sizer/sizer.dart';
 import '../../../../core/utils/constants.dart';
 import '../../../../core/Mapping/mapping_upload.dart';
+import '../../../../core/widgets/custom_snack_bar.dart';
 import '../../data/repo/result_repo.dart';
 import '../view_models/result_cubit.dart';
 import 'widgets/build_dropdown.dart';
@@ -24,8 +25,11 @@ class ResultPage extends StatelessWidget {
       child: BlocConsumer<ResultCubit, ResultState>(
         listener: (context, state) {
           if (state is ResultError) {
-            ScaffoldMessenger.of(context)
-                .showSnackBar(SnackBar(content: Text(state.message)));
+            customSnackBar(
+              context,
+              state.message,
+              Colors.red,
+            );
           }
         },
         builder: (context, state) {
@@ -63,7 +67,6 @@ class ResultPage extends StatelessWidget {
                       upload.name != null &&
                       upload.Risk != null)
                     const DoctorAskWidget(),
-                  
                 ],
               ),
             ),

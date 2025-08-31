@@ -134,7 +134,7 @@
 //                         SizedBox(height: 1.h),
 
 //                         // Details Section
-//                         ContentResult(label: 'Details:',value: 
+//                         ContentResult(label: 'Details:',value:
 //                             data?.description ?? 'No details available'),
 //                         SizedBox(height: 2.h),
 
@@ -184,6 +184,7 @@ import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:sizer/sizer.dart';
 import '../../../../core/utils/constants.dart';
 import '../../../../core/widgets/bar_pages_widget.dart';
+import '../../../../core/widgets/custom_snack_bar.dart';
 import '../view_models/infection_cubit.dart';
 import 'widgets/content_result.dart';
 import 'widgets/doctor_ask_widget.dart';
@@ -197,12 +198,18 @@ class InfectionPage extends StatelessWidget {
     return BlocProvider(
       create: (_) => InfectionCubit()..getDetails(id),
       child: Scaffold(
+        appBar: BarPagesWidget(
+          title: 'Result',
+        ),
         backgroundColor: Colors.white,
         body: BlocConsumer<InfectionCubit, InfectionState>(
           listener: (context, state) {
             if (state is InfectionError) {
-              ScaffoldMessenger.of(context)
-                  .showSnackBar(SnackBar(content: Text(state.message)));
+              customSnackBar(
+                context,
+                state.message,
+                Colors.red,
+              );
             }
           },
           builder: (context, state) {
@@ -220,8 +227,6 @@ class InfectionPage extends StatelessWidget {
               return SingleChildScrollView(
                 child: Column(
                   children: [
-                    SizedBox(height: 5.h),
-                    BarPagesWidget(title: 'Result'),
                     SizedBox(height: 3.h),
 
                     /// Image Section
@@ -267,21 +272,21 @@ class InfectionPage extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          ContentResult(label: 'Name:', value: data.Name ?? 'Unknown'),
+                          ContentResult(
+                              label: 'Name:', value: data.Name ?? 'Unknown'),
                           SizedBox(height: 2.h),
                           Divider(color: Colors.black, thickness: 0.2.w),
                           SizedBox(height: 1.h),
-
-                          ContentResult(label: 'Risk:', value: data.risk ?? 'N/A'),
+                          ContentResult(
+                              label: 'Risk:', value: data.risk ?? 'N/A'),
                           SizedBox(height: 2.h),
                           Divider(color: Colors.black, thickness: 0.2.w),
                           SizedBox(height: 1.h),
-
                           ContentResult(
                               label: 'Details:',
-                              value: data.description ?? 'No details available'),
+                              value:
+                                  data.description ?? 'No details available'),
                           SizedBox(height: 2.h),
-
                           Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [

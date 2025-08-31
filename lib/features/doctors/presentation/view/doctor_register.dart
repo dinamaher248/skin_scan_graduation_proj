@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sizer/sizer.dart';
+import '../../../../core/widgets/custom_snack_bar.dart';
 import '../../../register/presentation/view/widgets/email&password_widget.dart';
 import '../../../login/presentation/view/widgets/loginButton.dart';
 import '../../../login/presentation/view/widgets/loginHeader.dart';
@@ -83,18 +84,17 @@ class _Register_UserState extends State<DoctorRegister> {
       bool success = await doctorRegisterApi(phone, location, Education, Fees);
 
       if (success) {
-        // Navigate to login or home page if registration succeeds
         print("=======================sucesss===============================");
         Navigator.pushNamed(context, '/home');
       } else {
-        // Show error message if registration fails
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-              content: Text('Registration failed, please try again')),
-        );
+        customSnackBar(
+            context,
+            "Registration failed, please try again.",
+            Colors.red,
+          );
+       
       }
     } else {
-      // Trigger validation to display error messages
       formKey.currentState!.validate();
     }
   }

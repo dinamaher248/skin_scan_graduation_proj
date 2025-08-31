@@ -4,6 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sizer/sizer.dart';
 
+import '../../../../../core/utils/constants.dart';
 import '../../view_models/result_cubit.dart';
 
 Widget buildHeader(BuildContext context, ResultCubit cubit) {
@@ -19,7 +20,7 @@ Widget buildHeader(BuildContext context, ResultCubit cubit) {
             icon: Icon(
               Icons.close,
               size: 6.w,
-              color: const Color(0xFF34539D),
+              color: PrimaryColor,
             ),
           ),
         ),

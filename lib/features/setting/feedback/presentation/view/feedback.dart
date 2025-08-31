@@ -1,203 +1,182 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:sizer/sizer.dart';
-
 import '../../../../../core/utils/constants.dart';
-import '../../../../../core/helper/token.dart';
 import '../../../../../core/widgets/bar_pages_widget.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../../core/widgets/custom_snack_bar.dart';
+import '../../data/models/feedback_model.dart';
+import '../view_models/feedback_cubit.dart';
 
 class FeedbackPage extends StatelessWidget {
-  final TextEditingController emailController = TextEditingController();
   final TextEditingController subjectController = TextEditingController();
   final TextEditingController feedbackController = TextEditingController();
 
   FeedbackPage({super.key});
 
-  // Method to submit feedback
-  Future<void> submitFeedback(
-      BuildContext context, String subject, String feedback) async {
-    final url = Uri.parse('$resourceUrl/api/FeedBack/add');
-    String? token = await Tokens.retrieve('access_token');
-
-    final headers = {
-      "Authorization": "Bearer $token",
-      'Content-Type': 'application/json',
-    };
-
-    final body = jsonEncode({
-      'Subject': subject,
-      'FeedBackContent': feedback,
-    });
-
-    try {
-      final response = await http.post(
-        url,
-        headers: headers,
-        body: body,
-      );
-
-      if (response.statusCode == 200) {
-        // Feedback submitted successfully
-        print('Feedback submitted successfully');
-        final jsonResponse = json.decode(response.body);
-        print(jsonResponse);
-
-        // Show success message and clear fields
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text(
-              'Feedback sent successfully!',
-              style: TextStyle(color: Colors.white),
-            ),
-            backgroundColor: Colors.green,
-          ),
-        );
-
-        // Clear the text fields
-        subjectController.clear();
-        feedbackController.clear();
-      } else {
-        // Handle other errors
-        final errorRes = jsonDecode(response.body);
-        print('Failed to submit feedback: ${errorRes['User']}');
-      }
-    } catch (error) {
-      print('Error submitting feedback: $error');
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            SizedBox(height: 6.h),
+    return BlocProvider(
+      create: (_) => FeedbackCubit(),
+      child: Scaffold(
+        appBar: const BarPagesWidget(title: 'FeedBack'),
+        backgroundColor: Colors.white,
+        body: BlocConsumer<FeedbackCubit, FeedbackState>(
+          listener: (context, state) {
+            if (state is FeedbackSuccess) {
+              customSnackBar(
+                context,
+                "Feedback sent successfully!",
+                Colors.green,
+              );
 
-            BarPagesWidget(
-              title: 'FeedBack',
-            ),
+              subjectController.clear();
+              feedbackController.clear();
+            } else if (state is FeedbackError) {
+              customSnackBar(
+                context,
+                state.message,
+                Colors.red,
+              );
+            }
+          },
+          builder: (context, state) {
+            final cubit = context.read<FeedbackCubit>();
 
-            SizedBox(height: 2.h),
-
-            // Feedback Form Container
-            Container(
-              padding: EdgeInsets.all(3.w),
-              margin: EdgeInsets.symmetric(horizontal: 5.w),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(5.w),
-              ),
+            return SingleChildScrollView(
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    'Please write your feedback',
-                    style: TextStyle(
-                      fontSize: 16.sp,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                    ),
-                  ),
-                  SizedBox(height: 3.h),
-
-                  // Subject Input
                   Container(
-                    padding: EdgeInsets.symmetric(horizontal: 4.w),
+                    padding: EdgeInsets.all(3.w),
+                    margin: EdgeInsets.symmetric(horizontal: 5.w),
                     decoration: BoxDecoration(
-                      color: const Color(0xFFD9D9D9),
-                      borderRadius: BorderRadius.circular(10),
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(5.w),
                     ),
-                    child: TextField(
-                      controller: subjectController,
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText: 'Subject',
-                        hintStyle: TextStyle(fontSize: 14.sp),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 2.h),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Please write your feedback',
+                          style: TextStyle(
+                            fontSize: 16.sp,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                          ),
+                        ),
+                        SizedBox(height: 3.h),
 
-                  // Feedback Input
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 4.w),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFD9D9D9),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: TextField(
-                      controller: feedbackController,
-                      maxLines: 6,
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText: 'Feedback........',
-                        hintStyle: TextStyle(fontSize: 14.sp),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 4.h),
+                        // Subject Input
+                        _buildInputField(subjectController, 'Subject'),
+                        SizedBox(height: 2.h),
 
-                  // Submit Button
-                  GestureDetector(
-                    onTap: () async {
-                      final subject = subjectController.text;
-                      final feedback = feedbackController.text;
+                        // Feedback Input
+                        _buildInputField(feedbackController, 'Feedback........',
+                            maxLines: 6),
+                        SizedBox(height: 4.h),
 
-                      // Call submitFeedback on tap
-                      await submitFeedback(context, subject, feedback);
-                    },
-                    child: Container(
-                      padding: EdgeInsets.all(2.h),
-                      margin: EdgeInsets.symmetric(horizontal: 5.w),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF34539D),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            'Submit',
-                            style: TextStyle(
-                              fontSize: 16.sp,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
+                        GestureDetector(
+                          onTap: state is FeedbackLoading
+                              ? null
+                              : () {
+                                  final subject = subjectController.text.trim();
+                                  final feedback =
+                                      feedbackController.text.trim();
+
+                                  if (subject.isEmpty || feedback.isEmpty) {
+                                    customSnackBar(
+                                      context,
+                                      "Please fill in all fields before submitting.",
+                                      Colors.red,
+                                    );
+                                    return;
+                                  }
+
+                                  final model = FeedbackModel(
+                                    subject: subject,
+                                    feedback: feedback,
+                                  );
+
+                                  cubit.submitFeedback(model);
+                                },
+                          child: Container(
+                            padding: EdgeInsets.all(2.h),
+                            margin: EdgeInsets.symmetric(horizontal: 5.w),
+                            decoration: BoxDecoration(
+                              color: state is FeedbackLoading
+                                  ? PrimaryColor.withValues(alpha: 0.5)
+                                  : PrimaryColor,
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                if (state is FeedbackLoading)
+                                  LoadingAnimationWidget.threeArchedCircle(
+                                    color: Colors.white,
+                                    size: 30,
+                                  ),
+                                if (state is! FeedbackLoading)
+                                  Text(
+                                    'Submit',
+                                    style: TextStyle(
+                                      fontSize: 16.sp,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                              ],
                             ),
                           ),
-                        ],
-                      ),
-                    ),
-                  ),
-
-                  // Technical Info Text
-                  Padding(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 5.w, vertical: 3.h),
-                    child: Center(
-                      child: Text(
-                        'If you have a technical question or are experiencing difficulty using the app, please let us know.\n'
-                        'You can now access your program via web browser here.\n',
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.inter(
-                          color: const Color.fromARGB(255, 84, 83, 83),
-                          fontSize: 12.sp,
-                          fontWeight: FontWeight.w600, // Semi-bold
                         ),
-                      ),
+
+                        // Technical Info Text
+                        Padding(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 5.w, vertical: 3.h),
+                          child: Center(
+                            child: Text(
+                              'If you have a technical question or are experiencing difficulty using the app, please let us know.\n'
+                              'You can now access your program via web browser here.\n',
+                              textAlign: TextAlign.center,
+                              style: GoogleFonts.inter(
+                                color: const Color.fromARGB(255, 84, 83, 83),
+                                fontSize: 12.sp,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ],
               ),
-            ),
-          ],
+            );
+          },
+        ),
+      ),
+    );
+  }
+
+  Widget _buildInputField(TextEditingController controller, String hint,
+      {int maxLines = 1}) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 4.w),
+      decoration: BoxDecoration(
+        color: const Color(0xFFD9D9D9),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: TextField(
+        controller: controller,
+        maxLines: maxLines,
+        decoration: InputDecoration(
+          border: InputBorder.none,
+          hintText: hint,
+          hintStyle: TextStyle(fontSize: 14.sp),
         ),
       ),
     );
   }
 }
-
-

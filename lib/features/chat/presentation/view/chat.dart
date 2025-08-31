@@ -9,7 +9,7 @@ import 'package:sizer/sizer.dart';
 import '../../../../core/utils/constants.dart';
 import '../../../../core/helper/Chat.dart';
 import '../../../../core/helper/token.dart';
-
+import '../../../../core/widgets/custom_snack_bar.dart';
 
 class MessagePage extends StatefulWidget {
   MessagePage({
@@ -47,7 +47,6 @@ class _MessagePageState extends State<MessagePage> {
 
       if (!mounted) return;
 
-     
       setState(() {
         userId = fetchedUserId;
       });
@@ -80,17 +79,15 @@ class _MessagePageState extends State<MessagePage> {
         .openCon(await Tokens.getId(await Tokens.retrieve('access_token')));
     await chatService.startCon();
     listenMessage();
-   
 
     print("Connection successful! ");
 
     if (chatService.hubConnection?.state != HubConnectionState.connected) {
       print("Connection failed to initialize properly.");
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-            content: Text(
-                "Chat service not initialized or connection not established")),
-      );
+      customSnackBar(
+          context,
+          "Chat service not initialized or connection not established",
+          Colors.red);
     }
   }
 
@@ -119,7 +116,6 @@ class _MessagePageState extends State<MessagePage> {
         print(" Received message: $message");
         debugPrint("received message from server: $message");
 
-        
         setState(() {
           final newMessage = {
             'isReceived': message[0]['senderId'] != userId,
@@ -260,20 +256,26 @@ class _MessagePageState extends State<MessagePage> {
           scrollToBottom();
         } else {
           print("Failed to receive file URL from server.");
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("Failed to upload image, try again.")),
+          customSnackBar(
+            context,
+            "Failed to upload image, try again.",
+            Colors.red,
           );
         }
       } catch (e) {
         print("Error sending image: $e");
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Failed to send image: $e")),
+        customSnackBar(
+          context,
+          "Failed to send image: $e",
+          Colors.red,
         );
       }
     } else {
       print("Chat service not initialized or connection not established");
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Chat service not connected.")),
+      customSnackBar(
+        context,
+        "Chat service not connected.",
+        Colors.red,
       );
     }
     setState(() {
@@ -298,10 +300,10 @@ class _MessagePageState extends State<MessagePage> {
 
       scrollToBottom();
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Chat service not connected."),
-        ),
+      customSnackBar(
+        context,
+        "Chat service not connected!.",
+        Colors.red,
       );
     }
     setState(() {
@@ -323,8 +325,10 @@ class _MessagePageState extends State<MessagePage> {
       }
     } catch (e) {
       print("Error picking image: $e");
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Error picking image: $e")),
+      customSnackBar(
+        context,
+        "Error picking image: $e",
+        Colors.red,
       );
     }
   }

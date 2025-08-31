@@ -40,7 +40,7 @@ class setting_content_widget extends StatelessWidget {
                       style: GoogleFonts.inter(
                         fontSize: 16.5.sp,
                         color: Colors.black,
-                        fontWeight: FontWeight.w600, //semi bold
+                        fontWeight: FontWeight.w600, 
                       ),
                     ),
                   ),

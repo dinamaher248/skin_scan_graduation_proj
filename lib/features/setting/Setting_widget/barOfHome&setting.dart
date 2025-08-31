@@ -34,7 +34,7 @@ class _BarHomeSettingState extends State<BarHomeSetting> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<String>(
-      future: _getUserName(), // Calling the async function
+      future: _getUserName(), 
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return  Center(
@@ -44,9 +44,9 @@ class _BarHomeSettingState extends State<BarHomeSetting> {
                   )); 
         } else if (snapshot.hasError) {
           return Center(
-              child: Text('Error: ${snapshot.error}')); // Handle error
+              child: Text('Error: ${snapshot.error}')); 
         } else {
-          final userName = snapshot.data ?? 'User'; // Default to 'User' if null
+          final userName = snapshot.data ?? 'User'; 
           return Column(
             children: [
               SizedBox(
@@ -80,7 +80,7 @@ class _BarHomeSettingState extends State<BarHomeSetting> {
                         style: GoogleFonts.inter(
                           color: Colors.black,
                           fontSize: 16.sp,
-                          fontWeight: FontWeight.w600, // Semi-bold
+                          fontWeight: FontWeight.w600, 
                         ),
                       ),
                       Row(
@@ -93,7 +93,7 @@ class _BarHomeSettingState extends State<BarHomeSetting> {
                             style: GoogleFonts.inter(
                               color: const Color(0xFF989898),
                               fontSize: 12.8.sp,
-                              fontWeight: FontWeight.w500, // Medium
+                              fontWeight: FontWeight.w500, 
                             ),
                           ),
                         ],
@@ -109,7 +109,7 @@ class _BarHomeSettingState extends State<BarHomeSetting> {
                 style: GoogleFonts.inter(
                   color: const Color(0xFF142859),
                   fontSize: 21.sp,
-                  fontWeight: FontWeight.w600, // Semi-bold
+                  fontWeight: FontWeight.w600,
                 ),
               ),
             ],

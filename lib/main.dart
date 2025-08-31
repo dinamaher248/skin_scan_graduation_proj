@@ -20,11 +20,11 @@ import 'features/setting/Setting.dart';
 import 'features/camera/presentation/view/camera.dart';
 import 'features/setting/diseases/presentation/view/details_diseases.dart';
 import 'features/register/presentation/view/Register.dart';
-import 'features/splash/presentation/view/splash_view.dart';
+import 'features/splash/presentation/view/onboarding1.dart';
 import 'features/login/presentation/view/login.dart';
 import 'features/setting/invite/presentation/view/invite.dart';
-import 'features/splash/presentation/view/onboarding1.dart';
 import 'features/splash/presentation/view/onboarding2.dart';
+import 'features/splash/presentation/view/splash.dart';
 import 'features/profile/presentation/view/user_info.dart';
 import 'features/profile/presentation/view/users_page.dart';
 
@@ -40,7 +40,7 @@ Future<void> main() async {
   runApp(
     Sizer(
       builder: (context, orientation, deviceType) {
-        return MyApp(initialRoute: initialRoute);
+        return SkinScanApp(initialRoute: initialRoute);
       },
     ),
   );
@@ -63,10 +63,10 @@ Future<void> _requestCameraPermission() async {
 
 
 
-class MyApp extends StatelessWidget {
+class SkinScanApp extends StatelessWidget {
 final String initialRoute;
 
-  const MyApp({super.key, required this.initialRoute});
+  const SkinScanApp({super.key, required this.initialRoute});
 
   @override
   Widget build(BuildContext context) {
@@ -74,20 +74,20 @@ final String initialRoute;
       debugShowCheckedModeBanner: false,
       initialRoute: initialRoute,
       routes: {
-        '/': (context) => const Skin_Scan_App(),
-        '/second': (context) => const MySecond_intro(),
-        '/third': (context) => const MyThird_intro(),
+        '/': (context) => const Onboarding1(),
+        '/second': (context) => const Onboarding2(),
+        '/third': (context) => const Splash(),
         '/user': (context) => const User_Info(),
-        '/login': (context) => const LoginUser(),
-        '/Register': (context) => const Register_User(),
-        '/home': (context) => const HomePage(), //
+        '/login': (context) =>  LoginUser(),
+        '/Register': (context) =>  RegisterUser(),
+        '/home': (context) => const HomePage(), 
         '/setting': (context) => const Setting_page(),
         '/BrowseDisease': (context) => const Browse_Diseases(),
         '/BrowseDisease_page': (context) => const BrowseDiseases1(),
         '/details_disease': (context) => const DetailsDiseases(),
         '/camera': (context) => CameraPage(myCameras: cameras),
         '/invite': (context) => const Invite(),
-        '/aboutUs': (context) => const about_us(),
+        '/aboutUs': (context) => const AboutUs(),
         '/cart': (context) => const cart(),
         '/doctors': (context) => Doctors(),
         '/feedback': (context) => FeedbackPage(),

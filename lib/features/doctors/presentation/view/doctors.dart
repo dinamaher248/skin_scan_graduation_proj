@@ -9,6 +9,7 @@ import 'package:sizer/sizer.dart';
 
 import '../../../../core/utils/constants.dart';
 import '../../../../core/Mapping/map_doctor.dart';
+import '../../../../core/widgets/bar_pages_widget.dart';
 import '../../../chat/presentation/view/chat.dart';
 import '../../../home/presentation/view/Home.dart';
 
@@ -92,45 +93,15 @@ class _DoctorsState extends State<Doctors> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+       appBar: BarPagesWidget(
+        title: 'Doctor List',
+      ),
         backgroundColor: Colors.white,
         body: ListView(
           children: [
             Column(
               crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                SizedBox(height: 5.h),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.only(left: 4.w),
-                      child: IconButton(
-                        icon: Icon(
-                          Icons.arrow_circle_left_outlined,
-                          size: 22.3.sp,
-                          color: const Color(0xFF34539D),
-                        ),
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const HomePage()),
-                          );
-                        },
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(left: 10.h),
-                      child: Text('Doctor List',
-                          style: GoogleFonts.inter(
-                            color: Colors.black,
-                            fontSize: 17.5.sp,
-                            fontWeight: FontWeight.w600, //semi bold
-                          )),
-                    ),
-                  ],
-                ),
-                // BarPagesWidget(title: 'Doctor List'),
+              children: [               
                 SizedBox(
                   height: 3.h,
                 ),

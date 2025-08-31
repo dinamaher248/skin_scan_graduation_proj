@@ -1,12 +1,14 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:loading_animation_widget/loading_animation_widget.dart' show LoadingAnimationWidget;
+import 'package:loading_animation_widget/loading_animation_widget.dart'
+    show LoadingAnimationWidget;
 import 'package:sizer/sizer.dart';
 import 'package:http/http.dart' as http;
 import '../../../../../core/utils/constants.dart';
 import '../../../../../core/Mapping/Browse_mapping.dart';
 import '../../../../../core/helper/token.dart';
+import '../../../../../core/widgets/custom_snack_bar.dart';
 import 'widgets/disease_content._widget.dart';
 
 class Browse_Diseases extends StatefulWidget {
@@ -30,7 +32,7 @@ class _Browse_DiseasesState extends State<Browse_Diseases> {
         Content: value.Name,
         id: value.id,
       ));
-     historyList.add(SizedBox(height: 0.8.h));
+      historyList.add(SizedBox(height: 0.8.h));
     }
     return historyList;
   }
@@ -50,9 +52,12 @@ class _Browse_DiseasesState extends State<Browse_Diseases> {
     String? token = await Tokens.retrieve('access_token');
 
     if (token == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Authorization token not found."))
+      customSnackBar(
+        context,
+        "Authorization token not found.",
+        Colors.red,
       );
+
       setState(() {
         isLoading = false;
       });
@@ -73,8 +78,10 @@ class _Browse_DiseasesState extends State<Browse_Diseases> {
         });
       } else {
         print("Error: Failed to fetch diseases data.");
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Failed to fetch diseases data."))
+        customSnackBar(
+          context,
+          "Failed to fetch diseases data.",
+          Colors.red,
         );
         setState(() {
           isLoading = false;
@@ -82,9 +89,12 @@ class _Browse_DiseasesState extends State<Browse_Diseases> {
       }
     } catch (error) {
       print('Error : $error');
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Error occurred while fetching data."))
+      customSnackBar(
+        context,
+        "Error occurred while fetching data.",
+        Colors.red,
       );
+
       setState(() {
         isLoading = false;
       });
@@ -102,10 +112,11 @@ class _Browse_DiseasesState extends State<Browse_Diseases> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: isLoading
-          ? Center(child: LoadingAnimationWidget.inkDrop(
-                    color: PrimaryColor,
-                    size: 40,
-                  )) // Show loader while data is being fetched
+          ? Center(
+              child: LoadingAnimationWidget.inkDrop(
+              color: PrimaryColor,
+              size: 40,
+            )) // Show loader while data is being fetched
           : ListView(
               children: [
                 Column(
@@ -139,12 +150,11 @@ class _Browse_DiseasesState extends State<Browse_Diseases> {
                         ),
                       ],
                     ),
-                    //BarPagesWidget(title: 'Types of Diseases',),
                     SizedBox(height: 1.h),
                     ...list_disease,
                   ],
                 ),
-               // SizedBox(height: 3.h),
+                // SizedBox(height: 3.h),
               ],
             ),
     );

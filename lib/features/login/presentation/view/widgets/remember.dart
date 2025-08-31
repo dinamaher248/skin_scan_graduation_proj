@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sizer/sizer.dart';
 
+import '../../../../../core/utils/constants.dart';
 import 'resete_password.dart';
 
 class buildRememberMeRow extends StatefulWidget {
@@ -24,7 +25,7 @@ class _MyWidgetState extends State<buildRememberMeRow> {
           child: Checkbox(
               value: rememberMe,
               checkColor: Colors.white,
-              activeColor: const Color(0xFF34539D),
+              activeColor: PrimaryColor,
               onChanged: (bool? value) {
                 setState(() {
                   rememberMe = value;
@@ -33,7 +34,7 @@ class _MyWidgetState extends State<buildRememberMeRow> {
         ),
         Text('Remember me',
             style: GoogleFonts.inter(
-                color: const Color(0xFF34539D), fontSize: 14.4.sp)),
+                color:  PrimaryColor, fontSize: 14.4.sp)),
         const Spacer(),
         Padding(
           padding: EdgeInsets.only(right: 3.w),

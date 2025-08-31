@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sizer/sizer.dart';
 
-class MySecond_intro extends StatelessWidget {
-  const MySecond_intro({super.key});
+class Onboarding1 extends StatelessWidget {
+  const Onboarding1({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -14,22 +14,24 @@ class MySecond_intro extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Image(
-              image: const AssetImage('Images/photo_2024-08-11_12-36-43.jpg'),
+              image: const AssetImage('Images/image.png'),
               width: 60.w,
               height: 50.h,
             ),
+            //####################################
             Text('Welcome To Skin App! ',
                 style: GoogleFonts.poppins(
                   color: const Color.fromARGB(255, 0, 0, 0),
                   fontSize: 20.sp,
                   fontWeight: FontWeight.w500, //semi bold
                 )),
-            SizedBox(height: 5.h),
+            //#####################################
+            SizedBox(height: 3.h),
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 9.h, vertical: 0.w),
+              padding: EdgeInsets.symmetric(horizontal: 8.h, vertical: 1.w),
               child: Center(
                 child: Text(
-                    'Analyse your skin condition and receive instant results and recommendations',
+                    ' Our goal is to make you feel confident about your health Skin',
                     textAlign: TextAlign.center,
                     style: GoogleFonts.poppins(
                       color: const Color(0xFF5B5B5B),
@@ -38,7 +40,8 @@ class MySecond_intro extends StatelessWidget {
                     )),
               ),
             ),
-            SizedBox(height: 8.h),
+            //########################################
+            SizedBox(height: 10.h),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -51,7 +54,7 @@ class MySecond_intro extends StatelessWidget {
                 ),
                 CircleAvatar(
                   radius: 1.2.w,
-                  backgroundColor: const Color(0xFF34539D),
+                  backgroundColor: const Color(0xFF9CB8FF),
                 ),
                 SizedBox(width: 3.w),
                 CircleAvatar(
@@ -61,29 +64,7 @@ class MySecond_intro extends StatelessWidget {
               ],
             ),
             SizedBox(height: 8.h),
-            // Padding(
-            //   padding: EdgeInsets.only(right: 7.w),
-            //   child: Row(
-            //     mainAxisAlignment: MainAxisAlignment.end,
-            //     children: [
-            //       ElevatedButton(
-            //           style: ElevatedButton.styleFrom(
-            //               backgroundColor: const Color(0xFF34539D),
-            //               minimumSize: Size(30.w, 8.h)),
-            //           onPressed: () {
-            //             Navigator.pushNamed(context, '/third');
-            //           },
-            //           child: Text(
-            //             'Next',
-            //             style: TextStyle(
-            //               fontSize: 18.sp,
-            //               color: Colors.white,
-            //             ),
-            //           )),
-            //     ],
-            //   ),
-            // ),
-             Row(
+            Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 SizedBox(
@@ -92,7 +73,7 @@ class MySecond_intro extends StatelessWidget {
                     padding: EdgeInsets.only(right: 10.w),
                     child: ElevatedButton(
                       onPressed: () {
-                        Navigator.pushNamed(context, '/third');
+                        Navigator.pushNamed(context, '/second');
                       },
                       style: ElevatedButton.styleFrom(
                         shape: const CircleBorder(),
@@ -108,7 +89,7 @@ class MySecond_intro extends StatelessWidget {
                 ),
               ],
             ),
-           SizedBox(height: 8.h),
+            SizedBox(height: 8.h),
           ],
         ),
       ),

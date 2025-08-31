@@ -2,51 +2,94 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sizer/sizer.dart';
 
-class MyThird_intro extends StatefulWidget {
-  const MyThird_intro({super.key});
-
-  @override
-  State<MyThird_intro> createState() => _MyThird_introState();
-}
-
-class _MyThird_introState extends State<MyThird_intro> {
-  @override
-  void initState() {
-    super.initState();
-    // Delayed navigation
-    Future.delayed(const Duration(seconds: 1), () {
-      Navigator.pushNamed(context, '/login');
-    });
-  }
+class Onboarding2 extends StatelessWidget {
+  const Onboarding2({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF34539D),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              ClipOval(
-                child: Image.asset(
-                  'Images/photo_2024-08-11_12-46-29.jpg',
-                  width: 15.w,
-                  height: 10.h,
-                  fit: BoxFit.cover,
-                ),
+      backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Image(
+              image: const AssetImage('Images/photo_2024-08-11_12-36-43.jpg'),
+              width: 60.w,
+              height: 50.h,
+            ),
+            Text('Welcome To Skin App! ',
+                style: GoogleFonts.poppins(
+                  color: const Color.fromARGB(255, 0, 0, 0),
+                  fontSize: 20.sp,
+                  fontWeight: FontWeight.w500, //semi bold
+                )),
+            SizedBox(height: 5.h),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 9.h, vertical: 0.w),
+              child: Center(
+                child: Text(
+                    'Analyse your skin condition and receive instant results and recommendations',
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.poppins(
+                      color: const Color(0xFF5B5B5B),
+                      fontSize: 15.sp,
+                      fontWeight: FontWeight.w400, //semi bold
+                    )),
               ),
-            ],
-          ),
-          Text('Skin Scan ',
-              style: GoogleFonts.kavoon(
-                color: Colors.white,
-                fontSize: 23.sp,
-                fontWeight: FontWeight.w400, //Regular
-              )),
-        ],
+            ),
+            SizedBox(height: 8.h),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                CircleAvatar(
+                  radius: 1.2.w,
+                  backgroundColor: const Color(0xFF34539D),
+                ),
+                SizedBox(
+                  width: 3.w,
+                ),
+                CircleAvatar(
+                  radius: 1.2.w,
+                  backgroundColor: const Color(0xFF34539D),
+                ),
+                SizedBox(width: 3.w),
+                CircleAvatar(
+                  radius: 1.2.w,
+                  backgroundColor: const Color(0xFF9CB8FF),
+                ),
+              ],
+            ),
+            SizedBox(height: 8.h),
+            
+             Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                SizedBox(
+                  height: 6.h,
+                  child: Padding(
+                    padding: EdgeInsets.only(right: 10.w),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.pushNamed(context, '/third');
+                      },
+                      style: ElevatedButton.styleFrom(
+                        shape: const CircleBorder(),
+                        backgroundColor: const Color(0xFF4A6CBF),
+                      ),
+                      child: Icon(
+                        Icons.arrow_forward_ios_rounded,
+                        size: 5.w,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+           SizedBox(height: 8.h),
+          ],
+        ),
       ),
     );
   }

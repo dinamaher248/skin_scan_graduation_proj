@@ -7,6 +7,7 @@ import 'package:loading_animation_widget/loading_animation_widget.dart'
 import 'package:sizer/sizer.dart';
 
 import '../../../../core/utils/constants.dart';
+import '../../../../core/widgets/bar_pages_widget.dart';
 import '../../../doctors/presentation/view/doctor_info.dart';
 
 class Clincs extends StatefulWidget {
@@ -65,7 +66,7 @@ class _ClincsState extends State<Clincs> {
         hintText: 'Search about location',
         prefixIcon: Icon(Icons.search, size: 6.w),
         filled: true,
-        fillColor: Colors.grey[200],
+        fillColor: Colors.grey[100],
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(5.w),
           borderSide: BorderSide.none,
@@ -85,12 +86,10 @@ class _ClincsState extends State<Clincs> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Colors.transparent,
-        title: Text('Clinics',
-            style: TextStyle(fontSize: 6.w, fontWeight: FontWeight.bold)),
+      appBar: BarPagesWidget(
+        title: 'Clinics',
       ),
+      backgroundColor: Colors.white,
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 5.w),
         child: Column(
@@ -104,9 +103,6 @@ class _ClincsState extends State<Clincs> {
               child: Column(
                 children: [
                   if (!isSearched) ...[
-                    // Spacer(),
-                    SizedBox(height: 2.h),
-
                     buildSearchBar(),
                     SizedBox(height: 2.h),
                   ],

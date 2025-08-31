@@ -4,15 +4,14 @@ import 'package:sizer/sizer.dart';
 
 class AboutUsWidget extends StatelessWidget {
   String? info;
-    String? subject;
+  String? subject;
   AboutUsWidget({super.key, required this.subject, required this.info});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(3.h), // حول اطار حول
-      margin: EdgeInsets.symmetric(
-          horizontal: 2.h), //علشان اعمل مسافه من اليمين و الشمال
+      padding: EdgeInsets.all(3.h),
+      margin: EdgeInsets.symmetric(horizontal: 2.h),
       decoration: BoxDecoration(
         color: const Color.fromARGB(255, 192, 208, 253),
         borderRadius: BorderRadius.circular(6.w),
@@ -26,17 +25,17 @@ class AboutUsWidget extends StatelessWidget {
                 style: GoogleFonts.inter(
                   color: Colors.black,
                   fontSize: 17.sp,
-                  fontWeight: FontWeight.w600, //semi bold
+                  fontWeight: FontWeight.w600, 
                 )),
           ),
-          SizedBox(height: 1.5.h), // المسافة بين skin scan والنص
+          SizedBox(height: 1.5.h), 
           Center(
             child: Text('$info',
                 textAlign: TextAlign.center,
                 style: GoogleFonts.inter(
                   color: Colors.black,
                   fontSize: 16.sp,
-                  fontWeight: FontWeight.w400, //semi bold
+                  fontWeight: FontWeight.w400, 
                 )),
           ),
         ],
