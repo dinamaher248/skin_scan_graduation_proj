@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sizer/sizer.dart';
+import '../../../../core/utils/constants.dart';
 import '../../../../core/widgets/custom_snack_bar.dart';
 import '../../data/repo/register_repository.dart';
 import '../view_models/register_cubit.dart';
@@ -79,7 +80,7 @@ class _RegisterUserState extends State<RegisterUser> {
                     SizedBox(height: 9.h),
                     Text('Skin Scan',
                         style: GoogleFonts.kavoon(
-                          color: const Color(0xFF34539D),
+                          color:  PrimaryColor,
                           fontSize: 25,
                           fontWeight: FontWeight.w400,
                         )),
